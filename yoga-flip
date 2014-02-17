@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# This script will flip screen to the left, disable touchpad
+# and align touchscreen to screen.
+
+# xrandr-align can be found at https://github.com/wolneykien/xrandr-align
+
+output="eDP1"
+touchpad="SynPS/2 Synaptics TouchPad"
+touchscreen="ELAN Touchscreen"
+
+rotation=`xrandr -q --verbose | grep $output |cut -d ' ' -f6`
+if [ $rotation = "normal" ]
+then
+  xrandr -o left
+  xrandr-align  monitor --input="$touchscreen" &
+  xinput disable "$touchpad"
+else
+  xrandr -o normal
+  xrandr-align  monitor --input="$touchscreen" &
+  killall xrandr-align
+  xinput enable "$touchpad"
+fi

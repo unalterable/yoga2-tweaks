@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# Put into /etc/cron.daily/
+# More efficient than fstab discard option
+
+fstrim /
