@@ -1,9 +1,7 @@
 #!/bin/sh
 
-# This script will flip screen to the left, disable touchpad
-# and align touchscreen to screen.
-
-# xrandr-align can be found at https://github.com/wolneykien/xrandr-align
+# This script will start Onboad, flip screen to the left, disable touchpad
+# and align touchscreen to screen. Flips back and disables Onboard on second run.
 
 output="eDP1"
 touchpad="SynPS/2 Synaptics TouchPad"
@@ -12,12 +10,13 @@ touchscreen="ELAN Touchscreen"
 rotation=`xrandr -q --verbose | grep $output |cut -d ' ' -f6`
 if [ $rotation = "normal" ]
 then
-  xrandr -o left
-  xrandr-align  monitor --input="$touchscreen" &
+  onboard &
+  xrandr -o left &
+  xinput set-float-prop "$touchscreen" "Coordinate Transformation Matrix" 0 -1 1 1 0 0 0 0 1 &
   xinput disable "$touchpad"
 else
-  xrandr -o normal
-  xrandr-align  monitor --input="$touchscreen" &
-  killall xrandr-align
-  xinput enable "$touchpad"
+  xrandr -o normal &
+  xinput set-float-prop "$touchscreen" "Coordinate Transformation Matrix" 1 0 0 0 1 0 0 0 1 &
+  xinput enable "$touchpad" &
+  killall -HUP onboard # most daemons restart with this, onboard is killed
 fi
