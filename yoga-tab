@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# This script will start Onboard and disable touchpad.
+# Disables Onboard and reactivates touchpad on second run.
+
+output="eDP1"
+touchpad="SynPS/2 Synaptics TouchPad"
+
+enabled=`xinput list-props "$touchpad" | grep Device\ Enabled | awk '{ print $4 }'`
+if [ $enabled = "1" ]
+then
+  onboard &
+  xinput disable "$touchpad"
+else
+  xinput enable "$touchpad" &
+  killall -HUP onboard # most daemons restart with this, onboard is killed
+fi

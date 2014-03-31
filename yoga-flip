@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# This script will start Onboad, flip screen to the left, disable touchpad
-# and align touchscreen to screen. Flips back and disables Onboard on second run.
+# This script will start Onboard, flip screen to the left, disable touchpad
+# and align touchscreen to screen. Flips back, reenables touchpad and disables Onboard on second run.
 
 output="eDP1"
 touchpad="SynPS/2 Synaptics TouchPad"
@@ -18,5 +18,5 @@ else
   xrandr -o normal &
   xinput set-float-prop "$touchscreen" "Coordinate Transformation Matrix" 1 0 0 0 1 0 0 0 1 &
   xinput enable "$touchpad" &
-  killall -HUP onboard # most daemons restart with this, onboard is killed
+  killall -HUP onboard
 fi
