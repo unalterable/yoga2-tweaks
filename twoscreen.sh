@@ -11,9 +11,7 @@ rotation=`xrandr -q --verbose | grep $output |cut -d ' ' -f6`
 if [ $rotation = "normal" ]
 then
   onboard &
-  xrandr -o inverted &
-  xinput set-prop "$touchscreen" "Coordinate Transformation Matrix" -1 0 1 0 -1 1 0 0 1 &
-  xinput disable "$touchpad"
+  xinput set-prop "$touchscreen" "Coordinate Transformation Matrix" 1 0 0 0 1 0 0 0 1 &
 else
   xrandr -o normal &
   xinput set-prop "$touchscreen" "Coordinate Transformation Matrix" 1 0 0 0 1 0 0 0 1 &
