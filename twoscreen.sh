@@ -7,14 +7,14 @@ output="eDP1"
 touchpad="SynPS/2 Synaptics TouchPad"
 touchscreen="ELAN Touchscreen"
 
-rotation=`xrandr -q --verbose | grep $output |cut -d ' ' -f6`
-if [ $rotation = "normal" ]
+rotation=`xinput list-props "ELAN Touchscreen" | grep "Coordinate Transformation Matrix" | cut -d':' -f2 | xargs | cut -d',' -f1,2,3,4,5,6,7,8,9`
+
+
+if [ "$rotation" = '1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000' ]
 then
-  onboard &
-  xinput set-prop "$touchscreen" "Coordinate Transformation Matrix" 1 0 0 0 1 0 0 0 1 &
+  echo "Two Screen Transformation"
+  xinput set-prop "$touchscreen" "Coordinate Transformation Matrix" 1 0 0 0 0.5 0.5 0 0 1
 else
-  xrandr -o normal &
-  xinput set-prop "$touchscreen" "Coordinate Transformation Matrix" 1 0 0 0 1 0 0 0 1 &
-  xinput enable "$touchpad" &
-  killall -HUP onboard
+  echo "One Screen Transformation"
+  xinput set-prop "$touchscreen" "Coordinate Transformation Matrix" 1 0 0 0 1 0 0 0 1
 fi
